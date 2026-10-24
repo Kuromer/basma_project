@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basmah | Clothing Brand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --place-holder: #a0a0a04d;
+            --snow: #fffbff;
+            --bg-color: #d0c3b2;
+            --primary-taupe: #92817a;
+            --text-darkcoffee: #362417;
+            --text-black: #000500;
+            --font-main: "Cairo", sans-serif;
+            --danger: #ff4757;
+            --success: #28a745;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-main);
+            color: var(--text-darkcoffee);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-msg {
+            font-size: 1.4rem;
+            color: var(--text-darkcoffee);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .auth-wrapper {
+            background-color: var(--snow);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(54, 36, 23, 0.15);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #eeeae4;
+            padding: 5px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+        }
+
+        .tabs button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: none;
+            font-family: var(--font-main);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: 0.3s;
+            color: var(--primary-taupe);
+        }
+
+        .tabs button.active {
+            background-color: var(--primary-taupe);
+            color: var(--snow);
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid var(--place-holder);
+            border-radius: 12px;
+            background-color: #fff;
+            outline: none;
+            font-size: 0.95rem;
+            font-family: var(--font-main);
+        }
+
+        input:focus {
+            border-color: var(--primary-taupe);
+        }
+
+        .btn-submit {
+            background-color: var(--text-darkcoffee);
+            color: var(--snow);
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--text-black);
+        }
+
+        .status-msg {
+            font-size: 0.85rem;
+            margin-top: -10px;
+            display: none;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="brand-header">
+        <h1 style="color: var(--text-darkcoffee); font-size: 2.5rem;">BASMAH</h1>
+        <h2 class="welcome-msg">Welcome to Basmah</h2>
+        <p style="color: var(--primary-taupe);">Your favorite clothing store</p>
+    </header>
+
+    <div class="auth-wrapper">
+        <div class="tabs">
+            <button id="tabSignin" class="active" type="button">Sign In</button>
+            <button id="tabSignup" type="button">Sign Up</button>
+        </div>
+
+        <form id="formSignin" class="auth-form">
+            <input type="email" id="loginEmail" placeholder="Email Address" required>
+            <input type="password" id="loginPass" placeholder="Password" required>
+            <p id="loginError" class="status-msg" style="color: var(--danger);"></p>
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+
+        <form id="formSignup" class="auth-form hidden">
+            <input type="text" id="regName" placeholder="Full Name" required>
+            <input type="tel" id="regPhone" placeholder="Phone Number" required>
+            <input type="email" id="regEmail" placeholder="Email Address" required>
+            <input type="password" id="regPass" placeholder="Password" required>
+            <input type="password" id="regConfirmPass" placeholder="Confirm Password" required>
+            <p id="regError" class="status-msg" style="color: var(--danger);"></p>
+            <button type="submit" class="btn-submit">Create Account</button>
+        </form>
+    </div>
+
+        <script>
+            const API_BASE = 'http://127.0.0.1:8000/api';
+            const tabSignin = document.getElementById('tabSignin');
+            const tabSignup = document.getElementById('tabSignup');
+            const formSignin = document.getElementById('formSignin');
+            const formSignup = document.getElementById('formSignup');
+
+            tabSignin.addEventListener('click', () => {
+                formSignin.classList.remove('hidden');
+                formSignup.classList.add('hidden');
+                tabSignin.classList.add('active');
+                tabSignup.classList.remove('active');
+            });
+
+            tabSignup.addEventListener('click', () => {
+                formSignup.classList.remove('hidden');
+                formSignin.classList.add('hidden');
+                tabSignup.classList.add('active');
+                tabSignin.classList.remove('active');
+            });
+
+            // إنشاء حساب جديد عبر الباك إند
+            formSignup.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('regName').value.trim();
+                const phone = document.getElementById('regPhone').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const password = document.getElementById('regPass').value;
+                const confirmPass = document.getElementById('regConfirmPass').value;
+                const regError = document.getElementById('regError');
+
+                regError.style.display = "none";
+
+                if (password !== confirmPass) {
+                    regError.innerText = "Passwords do not match!";
+                    regError.style.display = "block";
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`${API_BASE}/auth/register/`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, phone, email, password })
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        const firstErr = Object.values(data)[0];
+                        regError.innerText = Array.isArray(firstErr) ? firstErr[0] : (data.error || "Registration failed!");
+                        regError.style.display = "block";
+                        return;
+                    }
+
+                    localStorage.setItem('basmah_token', data.token);
+                    localStorage.setItem('basmah_user', JSON.stringify(data.user));
+                    window.location.href = 'home_page.html';
+                } catch (err) {
+                    regError.innerText = "Server connection error!";
+                    regError.style.display = "block";
+                }
+            });
+
+            // تسجيل الدخول عبر الباك إند
+            formSignin.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPass').value;
+                const loginError = document.getElementById('loginError');
+
+                loginError.style.display = "none";
+
+                try {
+                    const res = await fetch(`${API_BASE}/auth/login/`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        loginError.innerText = data.error || "Invalid email or password!";
+                        loginError.style.display = "block";
+                        return;
+                    }
+
+                    localStorage.setItem('basmah_token', data.token);
+                    localStorage.setItem('basmah_user', JSON.stringify(data.user));
+
+                    // توجيه الإدمن للوحة التحكم والعميل للمتجر
+                    if (data.user.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'home_page.html';
+                    }
+                } catch (err) {
+                    loginError.innerText = "Server connection error!";
+                    loginError.style.display = "block";
+                }
+            });
+        </script>
+</body>
+</html>
