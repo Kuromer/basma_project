@@ -276,8 +276,8 @@
 <body>
 
     <header>
-        <a href="index.html" class="logo">BASMAH</a>
-        <a href="index.html" class="back-link">← Back to Shop</a>
+        <a href="/home_page" class="logo">BASMAH</a>
+        <a href="/home_page" class="back-link">← Back to Shop</a>
     </header>
 
     <div class="checkout-container">
@@ -363,7 +363,7 @@
             <div class="modal-icon">✓</div>
             <h2>Order Placed Successfully!</h2>
             <p style="color: var(--primary-taupe); margin: 15px 0;">Thank you for shopping at Basmah. Your order ID is: <strong id="orderId" style="color:var(--text-darkcoffee);">#BSM-0000</strong></p>
-            <button onclick="window.location.href='index.html'" class="btn-submit-order" style="margin-top: 10px;">Return to Shop</button>
+            <button onclick="window.location.href='/home_page'" class="btn-submit-order" style="margin-top: 10px;">Return to Shop</button>
         </div>
     </div>
 
@@ -393,7 +393,7 @@
             const container = document.getElementById('checkoutOrderItems');
 
             if (cart.length === 0) {
-                container.innerHTML = `<p style="text-align:center; padding: 20px; color: var(--primary-taupe);">Your cart is currently empty.<br><a href="home_page.html" style="color:var(--text-darkcoffee); font-weight:bold;">Browse Products</a></p>`;
+                container.innerHTML = `<p style="text-align:center; padding: 20px; color: var(--primary-taupe);">Your cart is currently empty.<br><a href="/home_page" style="color:var(--text-darkcoffee); font-weight:bold;">Browse Products</a></p>`;
                 updateTotals(0);
                 return;
             }

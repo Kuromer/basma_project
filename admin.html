@@ -325,10 +325,11 @@
     <header class="admin-navbar">
         <div class="container admin-nav-container">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <a href="home_page.html" class="brand-logo">BASMAH</a>
+                <a href="/home_page" class="brand-logo">BASMAH</a>
                 <span class="admin-badge">Admin Panel</span>
             </div>
-            <a href="home_page.html" style="color: #c5b8ad; font-size: 0.9rem;"><i class="fa-solid fa-house"></i> View Store</a>
+            <a href="/home_page" style="color: #c5b8ad; font-size: 0.9rem;"><i class="fa-solid fa-house"></i> View Store</a>
+            <button onclick="logoutUser()" style="background:none; border:1px solid rgba(255,255,255,0.15); color:#ff6b6b; padding:7px 14px; border-radius:10px; font-family:var(--font-main); font-size:0.85rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:0.3s;" onmouseover="this.style.background='rgba(255,107,107,0.12)'" onmouseout="this.style.background='none'"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
         </div>
     </header>
 
@@ -436,7 +437,7 @@
         // حماية الصفحة: التحقق من تسجيل دخول الإدمن
         if (!token || !currentUser || currentUser.role !== 'admin') {
             alert('Please sign in with an Admin account first (admin@basmah.com / admin123)');
-            window.location.href = 'signup.html';
+            window.location.href = '/signup';
         }
 
         const authHeaders = {
@@ -584,6 +585,21 @@
         }
 
         loadAdminData();
+
+        async function logoutUser() {
+            try {
+                if (token) {
+                    await fetch(`${API_BASE}/auth/logout/`, {
+                        method: 'POST',
+                        headers: authHeaders
+                    });
+                }
+            } catch (e) {}
+            localStorage.removeItem('basmah_token');
+            localStorage.removeItem('basmah_user');
+            localStorage.removeItem('basmah_cart');
+            window.location.href = '/signup';
+        }
     </script>
 </body>
 </html>

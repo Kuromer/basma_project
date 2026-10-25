@@ -222,7 +222,7 @@
 
                     localStorage.setItem('basmah_token', data.token);
                     localStorage.setItem('basmah_user', JSON.stringify(data.user));
-                    window.location.href = 'home_page.html';
+                    window.location.href = '/home_page';
                 } catch (err) {
                     regError.innerText = "Server connection error!";
                     regError.style.display = "block";
@@ -257,9 +257,9 @@
 
                     // توجيه الإدمن للوحة التحكم والعميل للمتجر
                     if (data.user.role === 'admin') {
-                        window.location.href = 'admin.html';
+                        window.location.href = '/admin';
                     } else {
-                        window.location.href = 'home_page.html';
+                        window.location.href = '/home_page';
                     }
                 } catch (err) {
                     loginError.innerText = "Server connection error!";

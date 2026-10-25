@@ -178,6 +178,83 @@
             color: var(--text-darkcoffee);
         }
 
+        /* ==================== USER DROPDOWN ==================== */
+        .user-dropdown-wrapper {
+            position: relative;
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background-color: var(--snow);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(54, 36, 23, 0.15);
+            border: 1px solid rgba(146, 129, 122, 0.12);
+            min-width: 200px;
+            padding: 8px 0;
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .user-dropdown-wrapper.open .user-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-user-info {
+            padding: 12px 18px 10px;
+            border-bottom: 1px solid #f0eae1;
+            margin-bottom: 4px;
+        }
+
+        .dropdown-user-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-darkcoffee);
+        }
+
+        .dropdown-user-role {
+            font-size: 0.75rem;
+            color: var(--primary-taupe);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-darkcoffee);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-family: var(--font-main);
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f7f4f0;
+        }
+
+        .dropdown-item.logout-item {
+            color: var(--danger);
+        }
+
+        .dropdown-item.logout-item:hover {
+            background-color: #fff0f1;
+        }
+
         /* Search Drawer Bar */
         .search-box-container {
             position: absolute;
@@ -1298,11 +1375,11 @@
                 <i class="fa-solid fa-bars"></i>
             </button>
 
-            <a href="index.html" class="brand-logo">BASMAH</a>
+            <a href="/home_page" class="brand-logo">BASMAH</a>
 
             <nav>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="/home_page" class="nav-link">Home</a></li>
                     <li><a href="#" class="nav-link active">Women</a></li>
                     <li><a href="#" class="nav-link">Men</a></li>
                     <li><a href="#" class="nav-link">Accessories</a></li>
@@ -1317,6 +1394,26 @@
                 <button class="action-btn" id="wishlistHeaderBtn" title="Wishlist">
                     <i class="fa-regular fa-heart"></i>
                 </button>
+
+                <!-- User Account / Dropdown -->
+                <div class="user-dropdown-wrapper" id="userDropdownWrapper">
+                    <a href="/signup" class="action-btn" id="userAccountBtn" title="Account">
+                        <i class="fa-regular fa-user"></i>
+                    </a>
+                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-user-name" id="dropdownUserName">User</div>
+                            <div class="dropdown-user-role" id="dropdownUserRole">Customer</div>
+                        </div>
+                        <a href="/admin" class="dropdown-item" id="adminPanelLink" style="display:none;">
+                            <i class="fa-solid fa-gauge"></i> Admin Panel
+                        </a>
+                        <button class="dropdown-item logout-item" onclick="logoutUser()">
+                            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                        </button>
+                    </div>
+                </div>
+
                 <button class="action-btn" id="cartToggleBtn" title="Shopping Bag">
                     <i class="fa-solid fa-bag-shopping"></i>
                     <span class="badge-count" id="cartBadge">0</span>
@@ -1337,7 +1434,7 @@
     <div class="breadcrumb-section">
         <div class="container">
             <div class="breadcrumb">
-                <a href="index.html">Home</a>
+                <a href="/home_page">Home</a>
                 <i class="fa-solid fa-chevron-right"></i>
                 <a href="#">Women</a>
                 <i class="fa-solid fa-chevron-right"></i>
@@ -1719,7 +1816,7 @@
                 <span>Subtotal</span>
                 <span id="cartSubtotal">$0.00</span>
             </div>
-            <button class="checkout-btn" onclick="alert('Redirecting to Secure Checkout!')">Proceed to Checkout</button>
+            <button class="checkout-btn" onclick="proceedToCheckoutFromProduct()">Proceed to Checkout</button>
         </div>
     </div>
 
@@ -1734,7 +1831,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="index.html" class="brand-logo">BASMAH</a>
+                    <a href="/home_page" class="brand-logo">BASMAH</a>
                     <p class="footer-text">Contemporary minimalist fashion designed with organic fabrics for elegance.</p>
                     <div class="social-links">
                         <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
@@ -1943,7 +2040,7 @@
                 if (!related || related.length === 0) return;
 
                 grid.innerHTML = related.map(p => `
-                    <div class="product-card" style="cursor:pointer;" onclick="window.location.href='product.html?id=${p.id}'">
+                    <div class="product-card" style="cursor:pointer;" onclick="window.location.href='/product?id=${p.id}'">
                         <div class="product-image-container">
                             <img src="${p.image}" alt="${p.title}">
                         </div>
@@ -2041,7 +2138,7 @@
 
         function handleBuyNow() {
             addToCartMainBtn.click();
-            window.location.href = 'checkout.html';
+            window.location.href = '/checkout';
         }
 
         function updateCartUI() {
@@ -2117,13 +2214,15 @@
         }
 
         // تفعيل زر Checkout داخل السلة
-        document.querySelector('.checkout-btn').onclick = () => {
+        function proceedToCheckoutFromProduct() {
             if (cart.length === 0) {
                 showToast("Your shopping bag is empty!");
                 return;
             }
-            window.location.href = 'checkout.html';
-        };
+            saveCart();
+            window.location.href = '/checkout';
+        }
+        document.querySelector('.checkout-btn').onclick = proceedToCheckoutFromProduct;
 
         // تفعيل زر إضافة تقييم جديد وإرساله للباك إند
         const writeReviewBtn = document.querySelector('.reviews-header button');
@@ -2163,6 +2262,48 @@
         document.getElementById('mobileMenuBtn').addEventListener('click', () => {
             document.getElementById('navMenu').classList.toggle('active');
         });
+
+        // إعداد الـ User Dropdown
+        const currentUser = JSON.parse(localStorage.getItem('basmah_user'));
+        const userAccountBtn = document.getElementById('userAccountBtn');
+        const userDropdownWrapper = document.getElementById('userDropdownWrapper');
+
+        if (currentUser && userAccountBtn) {
+            userAccountBtn.removeAttribute('href');
+            userAccountBtn.style.cursor = 'pointer';
+            if (currentUser.role === 'admin') {
+                userAccountBtn.innerHTML = '<i class="fa-solid fa-user-shield"></i>';
+                document.getElementById('adminPanelLink').style.display = 'flex';
+            } else {
+                userAccountBtn.innerHTML = '<i class="fa-solid fa-user-check"></i>';
+            }
+            document.getElementById('dropdownUserName').innerText = currentUser.name || 'User';
+            document.getElementById('dropdownUserRole').innerText = currentUser.role === 'admin' ? 'Administrator' : 'Customer';
+
+            userAccountBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdownWrapper.classList.toggle('open');
+            });
+            document.addEventListener('click', () => {
+                userDropdownWrapper.classList.remove('open');
+            });
+        }
+
+        async function logoutUser() {
+            const token = localStorage.getItem('basmah_token');
+            try {
+                if (token) {
+                    await fetch(`${API_BASE}/auth/logout/`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Token ${token}`, 'Content-Type': 'application/json' }
+                    });
+                }
+            } catch (e) {}
+            localStorage.removeItem('basmah_token');
+            localStorage.removeItem('basmah_user');
+            localStorage.removeItem('basmah_cart');
+            window.location.href = '/signup';
+        }
 
         updateCartUI();
         loadProductDetails();
